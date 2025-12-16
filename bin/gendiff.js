@@ -28,7 +28,7 @@ const format = options.format || 'stylish';
 try {
   const diff = genDiff(filepath1, filepath2, format);
   console.log(diff);
-} catch (error) {
-  console.error('Error:', error.message);
+} catch (err) {
+  console.error('Error:', err.message);
   process.exit(1);
 }

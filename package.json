@@ -8,11 +8,8 @@
   },
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run --bail=1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "engines": {
     "node": ">=14"
   },
@@ -20,5 +17,8 @@
     "commander": "^14.0.2",
     "lodash": "^4.17.21",
     "yaml": "^2.6.0"
+  },
+  "devDependencies": {
+    "vitest": "^0.34.0"
   }
 }
