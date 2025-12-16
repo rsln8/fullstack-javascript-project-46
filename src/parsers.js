@@ -1,18 +1,16 @@
-import fs from 'fs';
-import path from 'path';
+// src/parsers.js
 import yaml from 'js-yaml';
 
-export const readFile = (filepath) => {
-  const extension = path.extname(filepath).toLowerCase();
-  const content = fs.readFileSync(filepath, 'utf-8');
-
-  if (extension === '.json') {
-    return JSON.parse(content);
+const parse = (data, format) => {
+  switch (format) {
+    case 'json':
+      return JSON.parse(data);
+    case 'yml':
+    case 'yaml':
+      return yaml.load(data);
+    default:
+      throw new Error(`Unknown format: ${format}`);
   }
-
-  if (extension === '.yml' || extension === '.yaml') {
-    return yaml.load(content);
-  }
-
-  throw new Error(`Unsupported file format: ${extension}. Only .json, .yml, .yaml are supported`);
 };
+
+export default parse;
