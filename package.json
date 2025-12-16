@@ -8,17 +8,16 @@
   },
   "type": "module",
   "scripts": {
-    "test": "vitest run --bail=1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "engines": {
     "node": ">=14"
   },
   "dependencies": {
     "commander": "^14.0.2",
-    "lodash": "^4.17.21",
-    "yaml": "^2.6.0"
-  },
-  "devDependencies": {
-    "vitest": "^0.34.0"
+    "lodash": "^4.17.21"
   }
 }

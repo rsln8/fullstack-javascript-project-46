@@ -11,7 +11,7 @@ program
   .description('Compares two configuration files and shows a difference.')
   .version('1.0.0')
   .option('-f, --format [type]', 'output format')
-  .allowExcessArguments(true)
+  .allowExcessArguments(true) 
   .parse(process.argv);
 
 const options = program.opts();
@@ -28,7 +28,7 @@ const format = options.format || 'stylish';
 try {
   const diff = genDiff(filepath1, filepath2, format);
   console.log(diff);
-} catch (err) {
-  console.error('Error:', err.message);
+} catch (error) {
+  console.error('Error:', error.message);
   process.exit(1);
 }
