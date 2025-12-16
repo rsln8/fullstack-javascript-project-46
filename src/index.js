@@ -1,4 +1,3 @@
-// src/index.js
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -9,8 +8,7 @@ const readFile = (filepath) => fs.readFileSync(getFilePath(filepath), 'utf-8');
 const getFormat = (filepath) => path.extname(filepath).slice(1);
 
 const buildDiffTree = (data1, data2) => {
-  const keys = Array.from(new Set([...Object.keys(data1), ...Object.keys(data2)]))
-    .sort();
+  const keys = Array.from(new Set([...Object.keys(data1), ...Object.keys(data2)])).sort();
 
   return keys.map((key) => {
     const hasKey1 = Object.hasOwn(data1, key);
@@ -43,7 +41,6 @@ const buildDiffTree = (data1, data2) => {
     return { key, type: 'unchanged', value: value1 };
   });
 };
-
 
 const getIndent = (depth, spacesCount = 4) => ' '.repeat(depth * spacesCount - 2);
 const getBracketIndent = (depth, spacesCount = 4) => ' '.repeat((depth - 1) * spacesCount);
@@ -92,16 +89,54 @@ const formatStylish = (tree) => {
   return `{\n${iter(tree, 1)}\n}`;
 };
 
-const format = (tree, formatName = 'stylish') => {
-  if (formatName === 'stylish') {
-    return formatStylish(tree);
+const stringifyPlainValue = (value) => {
+  if (value === null) {
+    return 'null';
   }
-  if (formatName === 'json') {
-    return JSON.stringify(tree, null, 2);
+  if (typeof value === 'boolean' || typeof value === 'number') {
+    return String(value);
   }
-  throw new Error(`Unknown format: ${formatName}`);
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+  return '[complex value]';
 };
 
+const formatPlain = (tree, parentPath = '') => {
+  const lines = tree.flatMap((node) => {
+    const propertyPath = parentPath ? `${parentPath}.${node.key}` : node.key;
+
+    switch (node.type) {
+      case 'added':
+        return `Property '${propertyPath}' was added with value: ${stringifyPlainValue(node.value)}`;
+      case 'removed':
+        return `Property '${propertyPath}' was removed`;
+      case 'changed':
+        return `Property '${propertyPath}' was updated. From ${stringifyPlainValue(node.value1)} to ${stringifyPlainValue(node.value2)}`;
+      case 'unchanged':
+        return [];
+      case 'nested':
+        return formatPlain(node.children, propertyPath);
+      default:
+        throw new Error(`Unknown node type: ${node.type}`);
+    }
+  });
+
+  return lines.join('\n');
+};
+
+const format = (tree, formatName = 'stylish') => {
+  switch (formatName) {
+    case 'stylish':
+      return formatStylish(tree);
+    case 'plain':
+      return formatPlain(tree);
+    case 'json':
+      return JSON.stringify(tree, null, 2);
+    default:
+      throw new Error(`Unknown format: ${formatName}`);
+  }
+};
 
 const genDiff = (filepath1, filepath2, formatName = 'stylish') => {
   const data1 = parse(readFile(filepath1), getFormat(filepath1));
