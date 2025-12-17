@@ -21,13 +21,12 @@ const stringify = (value, depth) => {
   return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
-// Основная функция форматирования
 const formatDiff = (diff, depth = 1) => {
   const indent = makeIndent(depth);
   const bracketIndent = makeIndent(depth - 1);
   
   const lines = diff.map((item) => {
-    const currentIndent = indent.slice(0, -2); // Убираем 2 пробела для знаков +/-
+    const currentIndent = indent.slice(0, -2); 
     
     switch (item.type) {
       case 'added':

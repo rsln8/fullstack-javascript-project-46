@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 
 import { Command } from 'commander';
 import genDiff from '../src/index.js';
@@ -12,9 +12,10 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .argument('<filepath1>', 'path to first file')
   .argument('<filepath2>', 'path to second file')
-  .action((filepath1, filepath2) => {
+  .action((filepath1, filepath2, options) => {
     try {
-      const diff = genDiff(filepath1, filepath2);
+      const format = options.format || 'stylish';
+      const diff = genDiff(filepath1, filepath2, format);
       console.log(diff);
     } catch (error) {
       console.error(`Error: ${error.message}`);
