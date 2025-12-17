@@ -1,14 +1,14 @@
-import _ from 'lodash';
+﻿import _ from 'lodash';
 
 const buildDiff = (obj1, obj2) => {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
   const allKeys = _.sortBy(_.union(keys1, keys2));
-  
+
   return allKeys.map((key) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
-    
+
     if (!_.has(obj1, key)) {
       return {
         key,
@@ -16,7 +16,7 @@ const buildDiff = (obj1, obj2) => {
         type: 'added',
       };
     }
-    
+
     if (!_.has(obj2, key)) {
       return {
         key,
@@ -24,7 +24,7 @@ const buildDiff = (obj1, obj2) => {
         type: 'removed',
       };
     }
-    
+
     if (_.isEqual(value1, value2)) {
       return {
         key,
@@ -32,7 +32,18 @@ const buildDiff = (obj1, obj2) => {
         type: 'unchanged',
       };
     }
-    
+
+    // РЕКУРСИВНЫЙ СЛУЧАЙ: если оба значения - объекты (не массивы)
+    if (_.isObject(value1) && _.isObject(value2) && 
+        !Array.isArray(value1) && !Array.isArray(value2)) {
+      return {
+        key,
+        type: 'nested',
+        children: buildDiff(value1, value2),  // Рекурсивный вызов!
+      };
+    }
+
+    // Измененное значение (не объекты или разные типы)
     return {
       key,
       oldValue: value1,

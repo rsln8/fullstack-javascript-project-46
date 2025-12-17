@@ -1,34 +1,54 @@
-import _ from 'lodash';
+﻿import _ from 'lodash';
 
-const formatValue = (value) => {
-  if (_.isObject(value) && !Array.isArray(value)) {
-    return '[complex value]';
+// Вспомогательная функция для создания отступов
+const makeIndent = (depth, spacesCount = 4) => ' '.repeat(depth * spacesCount);
+
+// Функция для преобразования значений в строку
+const stringify = (value, depth) => {
+  if (!_.isObject(value) || value === null) {
+    return String(value);
   }
+
+  const indent = makeIndent(depth + 1);
+  const bracketIndent = makeIndent(depth);
+  const entries = Object.entries(value);
   
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  return JSON.stringify(value);
+  const lines = entries.map(([key, val]) => {
+    const formattedValue = stringify(val, depth + 1);
+    return `${indent}${key}: ${formattedValue}`;
+  });
+
+  return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
-const formatDiff = (diff) => {
+// Основная функция форматирования
+const formatDiff = (diff, depth = 1) => {
+  const indent = makeIndent(depth);
+  const bracketIndent = makeIndent(depth - 1);
+  
   const lines = diff.map((item) => {
+    const currentIndent = indent.slice(0, -2); // Убираем 2 пробела для знаков +/-
+    
     switch (item.type) {
       case 'added':
-        return `  + ${item.key}: ${formatValue(item.value)}`;
+        return `${currentIndent}+ ${item.key}: ${stringify(item.value, depth)}`;
       case 'removed':
-        return `  - ${item.key}: ${formatValue(item.value)}`;
+        return `${currentIndent}- ${item.key}: ${stringify(item.value, depth)}`;
       case 'unchanged':
-        return `    ${item.key}: ${formatValue(item.value)}`;
+        return `${indent}${item.key}: ${stringify(item.value, depth)}`;
       case 'changed':
-        return `  - ${item.key}: ${formatValue(item.oldValue)}\n  + ${item.key}: ${formatValue(item.newValue)}`;
+        return [
+          `${currentIndent}- ${item.key}: ${stringify(item.oldValue, depth)}`,
+          `${currentIndent}+ ${item.key}: ${stringify(item.newValue, depth)}`
+        ].join('\n');
+      case 'nested':
+        return `${indent}${item.key}: ${formatDiff(item.children, depth + 1)}`;
       default:
         throw new Error(`Unknown type: ${item.type}`);
     }
   });
-  
-  return `{\n${lines.join('\n')}\n}`;
+
+  return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
 export default formatDiff;
