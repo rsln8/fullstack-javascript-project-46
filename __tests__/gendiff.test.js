@@ -41,10 +41,10 @@ describe('gendiff', () => {
       .toThrow('Unsupported file format: txt');
   });
 
-  test('works with format option', () => {
+  test('works without format option', () => {
     const filepath1 = getFixturePath('file1.json');
     const filepath2 = getFixturePath('file2.json');
-    const result = normalizeLineEndings(genDiff(filepath1, filepath2, 'stylish'));
+    const result = normalizeLineEndings(genDiff(filepath1, filepath2));
     expect(result).toBe(expected);
   });
 });

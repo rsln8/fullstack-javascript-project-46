@@ -3,7 +3,7 @@ import { parse, getFormat } from './parsers.js';
 import buildDiff from './buildDiff.js';
 import formatDiff from './formatters/stylish.js';
 
-const genDiff = (filepath1, filepath2, format = 'stylish') => {
+const genDiff = (filepath1, filepath2) => {
   const data1 = readFile(filepath1);
   const data2 = readFile(filepath2);
 
