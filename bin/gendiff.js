@@ -12,7 +12,7 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .argument('<filepath1>', 'path to first file')
   .argument('<filepath2>', 'path to second file')
-  .action((filepath1, filepath2, options) => {
+  .action((filepath1, filepath2) => {
     try {
       const diff = genDiff(filepath1, filepath2);
       console.log(diff);
