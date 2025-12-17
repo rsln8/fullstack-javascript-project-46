@@ -1,47 +1,50 @@
-const { join } = require('path');
-const genDiff = require('../src/index.js');
+﻿import { join } from 'path';
+import { readFileSync } from 'fs';
+import genDiff from '../src/index.js';
 
-const getFixturePath = (filename) => join(__dirname, '__fixtures__', filename);
+const getFixturePath = (filename) => {
+  return join(process.cwd(), '__tests__', '__fixtures__', filename);
+};
+
+// Функция для нормализации концов строк
+const normalizeLineEndings = (str) => str.replace(/\r\n/g, '\n').trim();
 
 describe('gendiff', () => {
-  // Ожидаемый результат из файла
-  const expected = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
+  // Прочитаем ожидаемый результат из файла
+  const expectedPath = getFixturePath('expected_flat.txt');
+  const expected = normalizeLineEndings(readFileSync(expectedPath, 'utf-8'));
 
   test('compares flat JSON files', () => {
     const filepath1 = getFixturePath('file1.json');
     const filepath2 = getFixturePath('file2.json');
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
+    const result = normalizeLineEndings(genDiff(filepath1, filepath2));
+    expect(result).toBe(expected);
   });
 
   test('compares flat YAML files', () => {
     const filepath1 = getFixturePath('file1.yml');
     const filepath2 = getFixturePath('file2.yml');
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
+    const result = normalizeLineEndings(genDiff(filepath1, filepath2));
+    expect(result).toBe(expected);
   });
 
   test('compares flat YAML with .yaml extension', () => {
     const filepath1 = getFixturePath('file1.yaml');
     const filepath2 = getFixturePath('file2.yaml');
-    expect(genDiff(filepath1, filepath2)).toBe(expected);
+    const result = normalizeLineEndings(genDiff(filepath1, filepath2));
+    expect(result).toBe(expected);
   });
 
   test('throws error for unsupported format', () => {
     const unsupportedFile = getFixturePath('unsupported.txt');
     expect(() => genDiff(unsupportedFile, unsupportedFile))
-      .toThrow('Unsupported file format: .txt');
+      .toThrow('Unsupported file format: txt');
   });
 
   test('works with format option', () => {
     const filepath1 = getFixturePath('file1.json');
     const filepath2 = getFixturePath('file2.json');
-    const result = genDiff(filepath1, filepath2, 'stylish');
+    const result = normalizeLineEndings(genDiff(filepath1, filepath2, 'stylish'));
     expect(result).toBe(expected);
   });
 });
