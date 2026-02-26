@@ -4,7 +4,8 @@
   "description": "[![Actions Status](https://github.com/rsln8/fullstack-javascript-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/rsln8/fullstack-javascript-project-46/actions)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,12 @@
   "type": "module",
   "bin": {
     "gendiff": "bin/gendiff.js"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "jest": "^30.2.0"
   }
 }
