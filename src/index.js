@@ -12,10 +12,9 @@ const genDiff = (path1, path2) => {
   const obj1 = JSON.parse(data1);
   const obj2 = JSON.parse(data2);
 
-  // Получаем все уникальные ключи из обоих объектов и сортируем их
   const keys = _.sortBy(_.union(_.keys(obj1), _.keys(obj2)));
 
-  const result = keys.map((key) => {
+  const diff = keys.map((key) => {
     if (!_.has(obj1, key)) {
       return `  + ${key}: ${obj2[key]}`;
     }
@@ -28,7 +27,7 @@ const genDiff = (path1, path2) => {
     return `    ${key}: ${obj1[key]}`;
   });
 
-  return `{\n${result.join("\n")}\n}`;
+  return `{\n${diff.join("\n")}\n}`;
 };
 
 export default genDiff;
