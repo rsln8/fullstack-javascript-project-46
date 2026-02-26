@@ -1,30 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-// __dirname ???? ?? ????????????, ?? ????? ???????????? ?????
-// eslint-disable-next-line no-unused-vars
-const __dirname = path.dirname(__filename);
-
-const parseJson = (filepath) => {
-  console.log('Reading file:', filepath);
-  const content = fs.readFileSync(filepath, 'utf8');
-  console.log('Content:', JSON.stringify(content));
-  console.log('First char code:', content.charCodeAt(0));
-
-  try {
-    return JSON.parse(content);
-  } catch (e) {
-    console.error('Parse error:', e.message);
-    throw e;
-  }
-};
+import parser from './parsers.js';
 
 const genDiff = (filepath1, filepath2) => {
   try {
-    const data1 = parseJson(filepath1);
-    const data2 = parseJson(filepath2);
+    const data1 = parser(filepath1);
+    const data2 = parser(filepath2);
 
     const keys1 = Object.keys(data1);
     const keys2 = Object.keys(data2);
