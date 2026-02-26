@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import _ from "lodash";
 
 const genDiff = (path1, path2) => {
   const fullPath1 = path.resolve(process.cwd(), path1);
@@ -11,10 +12,23 @@ const genDiff = (path1, path2) => {
   const obj1 = JSON.parse(data1);
   const obj2 = JSON.parse(data2);
 
-  console.log(obj1);
-  console.log(obj2);
+  // Получаем все уникальные ключи из обоих объектов и сортируем их
+  const keys = _.sortBy(_.union(_.keys(obj1), _.keys(obj2)));
 
-  return "Comparison result will be here";
+  const result = keys.map((key) => {
+    if (!_.has(obj1, key)) {
+      return `  + ${key}: ${obj2[key]}`;
+    }
+    if (!_.has(obj2, key)) {
+      return `  - ${key}: ${obj1[key]}`;
+    }
+    if (obj1[key] !== obj2[key]) {
+      return `  - ${key}: ${obj1[key]}\n  + ${key}: ${obj2[key]}`;
+    }
+    return `    ${key}: ${obj1[key]}`;
+  });
+
+  return `{\n${result.join("\n")}\n}`;
 };
 
 export default genDiff;
