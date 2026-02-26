@@ -5,8 +5,10 @@ import _ from "lodash";
 const genDiff = (path1, path2) => {
   const fullPath1 = path.resolve(process.cwd(), path1);
   const fullPath2 = path.resolve(process.cwd(), path2);
+
   const data1 = fs.readFileSync(fullPath1, "utf-8");
   const data2 = fs.readFileSync(fullPath2, "utf-8");
+
   const obj1 = JSON.parse(data1);
   const obj2 = JSON.parse(data2);
 
