@@ -22,17 +22,17 @@ function buildDiff(obj1, obj2) {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
   
-  // Сохраняем порядок ключей из первого файла, добавляем новые из второго
   const allKeys = [];
   const keysSet = new Set();
   
-  // Сначала добавляем ключи из первого файла в том порядке, как они идут
+  // Сначала добавляем все ключи из первого файла (в их порядке)
   for (const key of keys1) {
     keysSet.add(key);
     allKeys.push(key);
   }
   
-  // Добавляем ключи из второго файла, которых ещё нет
+  // Затем добавляем ключи из второго файла, которых нет в первом,
+  // сохраняя порядок из второго файла
   for (const key of keys2) {
     if (!keysSet.has(key)) {
       allKeys.push(key);
