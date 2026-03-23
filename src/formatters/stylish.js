@@ -11,13 +11,14 @@ const stringify = (value, depth) => {
 };
 
 const stylish = (diffTree, depth = 0) => {
-  const indent = '  '.repeat(depth);
   const result = diffTree.map((node) => {
     const key = node.key;
     const value = node.value;
-    const signIndent = '  '.repeat(depth + 2);
-    // unchanged на 2 пробела больше чем signIndent
-    const unchangedIndent = '  '.repeat(depth + 3);
+    const indent = '  '.repeat(depth);
+    // Для плоских файлов (depth=0) отступ 2 пробела, для вложенных 6 пробелов
+    const signIndent = depth === 0 ? '  ' : '  '.repeat(depth + 2);
+    // Для unchanged: на 2 пробела больше чем signIndent
+    const unchangedIndent = depth === 0 ? '    ' : '  '.repeat(depth + 3);
     
     switch (node.type) {
       case 'added':
