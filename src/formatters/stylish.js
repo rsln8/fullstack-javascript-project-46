@@ -17,8 +17,9 @@ const stylish = (diffTree, depth = 0) => {
     const key = node.key;
     const value = node.value;
     const indent = '  '.repeat(depth);
-    // signIndent: 4 пробела от начала строки для depth=1 (common)
     const signIndent = depth === 0 ? '  ' : '  '.repeat(depth + 2);
+    // unchanged: на 4 пробела больше, чем sign (т.е. 8 пробелов на глубине 1)
+    const unchangedIndent = depth === 0 ? '    ' : '  '.repeat(depth + 3);
     
     switch (node.type) {
       case 'added':
@@ -26,7 +27,7 @@ const stylish = (diffTree, depth = 0) => {
       case 'removed':
         return `${signIndent}- ${key}: ${stringify(value, depth + 1)}`;
       case 'unchanged':
-        return `${indent}    ${key}: ${stringify(value, depth + 1)}`;
+        return `${unchangedIndent}${key}: ${stringify(value, depth + 1)}`;
       case 'changed':
         return [
           `${signIndent}- ${key}: ${stringify(node.oldValue, depth + 1)}`,
