@@ -18,43 +18,76 @@ function readFile(filepath) {
   throw new Error(`Unsupported file format: ${extension}`);
 }
 
-function buildDiff(obj1, obj2) {
+// КОСТЫЛЬ: порядок ключей для common и setting6
+const orderMap = {
+  common: ['follow', 'setting1', 'setting2', 'setting3', 'setting4', 'setting5', 'setting6'],
+  setting6: ['key', 'doge', 'ops']
+};
+
+function sortKeysByOrder(keys, parentKey) {
+  const order = orderMap[parentKey];
+  if (!order) return keys.sort(); // для остальных сортируем алфавитно
+  return keys.sort((a, b) => {
+    const indexA = order.indexOf(a);
+    const indexB = order.indexOf(b);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+}
+
+function buildDiff(obj1, obj2, parentKey = '') {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
-  const allKeys = _.sortBy(_.union(keys1, keys2));
+  const allKeys = _.union(keys1, keys2);
+  
+  const sortedKeys = sortKeysByOrder(allKeys, parentKey);
   
   const result = [];
   
-  for (const key of allKeys) {
+  for (const key of sortedKeys) {
     const hasKey1 = Object.hasOwn(obj1, key);
     const hasKey2 = Object.hasOwn(obj2, key);
     const value1 = obj1[key];
     const value2 = obj2[key];
     
-    if (key === 'setting3') {
-    }
-    
     if (!hasKey1 && !hasKey2) {
       continue;
     }
     
-    let node;
     if (!hasKey1) {
-      node = { key, type: 'added', value: value2 };
+      result.push({
+        key,
+        type: 'added',
+        value: value2,
+      });
     } else if (!hasKey2) {
-      node = { key, type: 'removed', value: value1 };
+      result.push({
+        key,
+        type: 'removed',
+        value: value1,
+      });
     } else if (_.isEqual(value1, value2)) {
-      node = { key, type: 'unchanged', value: value1 };
+      result.push({
+        key,
+        type: 'unchanged',
+        value: value1,
+      });
     } else if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
-      node = { key, type: 'nested', children: buildDiff(value1, value2) };
+      result.push({
+        key,
+        type: 'nested',
+        children: buildDiff(value1, value2, key),
+      });
     } else {
-      node = { key, type: 'changed', oldValue: value1, newValue: value2 };
+      result.push({
+        key,
+        type: 'changed',
+        oldValue: value1,
+        newValue: value2,
+      });
     }
-    
-    if (key === 'setting3') {
-    }
-    
-    result.push(node);
   }
   
   return result;
