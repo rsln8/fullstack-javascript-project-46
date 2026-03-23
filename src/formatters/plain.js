@@ -37,6 +37,7 @@ function plain(diffTree, path = '') {
         result.push(`Property '${fullPath}' was removed`);
         break;
       case 'changed': {
+        // Для changed, если oldValue — объект, показываем [complex value], иначе true
         const oldVal = _.isPlainObject(node.oldValue) ? '[complex value]' : formatValue(node.oldValue);
         const newVal = _.isPlainObject(node.newValue) ? '[complex value]' : formatValue(node.newValue);
         result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);

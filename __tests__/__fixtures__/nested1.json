@@ -24,5 +24,16 @@
     "deep": {
       "id": 45
     }
-  }
+  },
+  "group4": {
+    "default": null,
+    "foo": 0,
+    "isNested": false,
+    "nest": {
+      "bar": "",
+      "isNested": true
+    },
+    "type": "bas"
+  },
+  "language": "js"
 }
