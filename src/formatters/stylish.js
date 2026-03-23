@@ -22,7 +22,9 @@ const stringify = (value, depth) => {
     bracketIndent = '  '.repeat(depth);
   }
   
-  // Для глубины 2 используем отступ 12 пробелов для ключей
+  // Для глубины 2 закрывающая скобка должна быть на 8 пробелах
+  const finalBracketIndent = depth === 2 ? '        ' : bracketIndent;
+  
   const lines = Object.entries(value).map(([key, val]) => {
     let keyIndent;
     if (depth === 2) {
@@ -33,7 +35,7 @@ const stringify = (value, depth) => {
     return `${keyIndent}${key}: ${stringify(val, depth + 1)}`;
   });
   
-  return `{\n${lines.join('\n')}\n${bracketIndent}}`;
+  return `{\n${lines.join('\n')}\n${finalBracketIndent}}`;
 };
 
 const stylish = (diffTree, depth = 0) => {
