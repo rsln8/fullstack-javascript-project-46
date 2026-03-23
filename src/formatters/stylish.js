@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 function formatValue(value, depth = 0) {
   if (_.isPlainObject(value)) {
-    const indent = '  '.repeat(depth + 2);
+    const indent = '  '.repeat(depth + 1);
     const entries = Object.entries(value).map(([k, v]) => {
       return `${indent}  ${k}: ${formatValue(v, depth + 1)}`;
     });
@@ -21,26 +21,26 @@ function stylish(diffTree, depth = 0) {
   
   for (const node of diffTree) {
     const key = node.key;
-    const indentSpaces = '  '.repeat(depth + 1);
+    const indentSpaces = '  '.repeat(depth);
     
     switch (node.type) {
       case 'added':
-        result.push(`${indentSpaces}+ ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${indentSpaces}  + ${key}: ${formatValue(node.value, depth)}`);
         break;
       case 'removed':
-        result.push(`${indentSpaces}- ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${indentSpaces}  - ${key}: ${formatValue(node.value, depth)}`);
         break;
       case 'unchanged':
-        result.push(`${indentSpaces}  ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${indentSpaces}    ${key}: ${formatValue(node.value, depth)}`);
         break;
       case 'changed':
-        result.push(`${indentSpaces}- ${key}: ${formatValue(node.oldValue, depth)}`);
-        result.push(`${indentSpaces}+ ${key}: ${formatValue(node.newValue, depth)}`);
+        result.push(`${indentSpaces}  - ${key}: ${formatValue(node.oldValue, depth)}`);
+        result.push(`${indentSpaces}  + ${key}: ${formatValue(node.newValue, depth)}`);
         break;
       case 'nested':
-        result.push(`${indentSpaces}  ${key}: {`);
-        result.push(stylish(node.children, depth + 2));
-        result.push(`${indentSpaces}  }`);
+        result.push(`${indentSpaces}    ${key}: {`);
+        result.push(stylish(node.children, depth + 1));
+        result.push(`${indentSpaces}    }`);
         break;
     }
   }
