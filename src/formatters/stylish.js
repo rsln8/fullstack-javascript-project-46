@@ -18,29 +18,32 @@ function formatValue(value, depth = 0) {
 
 function stylish(diffTree, depth = 0) {
   const result = [];
+  const indent = '  '.repeat(depth);
+  const innerIndent = '  '.repeat(depth + 1);
   
   for (const node of diffTree) {
     const key = node.key;
-    const indentSpaces = '  '.repeat(depth);
+    // Для плюсов и минусов добавляем ещё 2 пробела (всего 4 на первом уровне)
+    const signIndent = depth === 0 ? '    ' : '  '.repeat(depth + 2);
     
     switch (node.type) {
       case 'added':
-        result.push(`${indentSpaces}  + ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${signIndent}+ ${key}: ${formatValue(node.value, depth + 1)}`);
         break;
       case 'removed':
-        result.push(`${indentSpaces}  - ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${signIndent}- ${key}: ${formatValue(node.value, depth + 1)}`);
         break;
       case 'unchanged':
-        result.push(`${indentSpaces}    ${key}: ${formatValue(node.value, depth)}`);
+        result.push(`${innerIndent}  ${key}: ${formatValue(node.value, depth + 1)}`);
         break;
       case 'changed':
-        result.push(`${indentSpaces}  - ${key}: ${formatValue(node.oldValue, depth)}`);
-        result.push(`${indentSpaces}  + ${key}: ${formatValue(node.newValue, depth)}`);
+        result.push(`${signIndent}- ${key}: ${formatValue(node.oldValue, depth + 1)}`);
+        result.push(`${signIndent}+ ${key}: ${formatValue(node.newValue, depth + 1)}`);
         break;
       case 'nested':
-        result.push(`${indentSpaces}    ${key}: {`);
+        result.push(`${innerIndent}  ${key}: {`);
         result.push(stylish(node.children, depth + 1));
-        result.push(`${indentSpaces}    }`);
+        result.push(`${innerIndent}  }`);
         break;
     }
   }
