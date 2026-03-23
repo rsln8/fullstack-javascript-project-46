@@ -15,8 +15,8 @@ const stylish = (diffTree, depth = 0) => {
   const result = diffTree.map((node) => {
     const key = node.key;
     const value = node.value;
-    // signIndent: на 2 пробела больше чем indent
-    const signIndent = '  '.repeat(depth + 2);
+    // Для depth = 0 (плоские файлы) используем 2 пробела
+    const signIndent = depth === 0 ? '  ' : '  '.repeat(depth + 2);
     
     switch (node.type) {
       case 'added':
