@@ -21,7 +21,23 @@ function readFile(filepath) {
 function buildDiff(obj1, obj2) {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
-  const allKeys = _.sortBy(_.union(keys1, keys2));
+  
+  // Сохраняем порядок ключей из первого файла, добавляем новые из второго
+  const allKeys = [];
+  const keysSet = new Set();
+  
+  // Сначала добавляем ключи из первого файла в том порядке, как они идут
+  for (const key of keys1) {
+    keysSet.add(key);
+    allKeys.push(key);
+  }
+  
+  // Добавляем ключи из второго файла, которых ещё нет
+  for (const key of keys2) {
+    if (!keysSet.has(key)) {
+      allKeys.push(key);
+    }
+  }
   
   const result = [];
   
@@ -80,7 +96,6 @@ function genDiff(filepath1, filepath2, formatName = 'stylish') {
   const formatter = getFormatter(formatName);
   const result = formatter(diffTree);
   
-  // Гарантируем, что всегда возвращаем строку
   if (typeof result !== 'string') {
     return String(result);
   }
