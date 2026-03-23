@@ -31,30 +31,21 @@ function buildDiff(obj1, obj2) {
     const value1 = obj1[key];
     const value2 = obj2[key];
     
-    if (key === 'setting3') {
-    }
-    
     if (!hasKey1 && !hasKey2) {
       continue;
     }
     
-    let node;
     if (!hasKey1) {
-      node = { key, type: 'added', value: value2 };
+      result.push({ key, type: 'added', value: value2 });
     } else if (!hasKey2) {
-      node = { key, type: 'removed', value: value1 };
+      result.push({ key, type: 'removed', value: value1 });
     } else if (_.isEqual(value1, value2)) {
-      node = { key, type: 'unchanged', value: value1 };
+      result.push({ key, type: 'unchanged', value: value1 });
     } else if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
-      node = { key, type: 'nested', children: buildDiff(value1, value2) };
+      result.push({ key, type: 'nested', children: buildDiff(value1, value2) });
     } else {
-      node = { key, type: 'changed', oldValue: value1, newValue: value2 };
+      result.push({ key, type: 'changed', oldValue: value1, newValue: value2 });
     }
-    
-    if (key === 'setting3') {
-    }
-    
-    result.push(node);
   }
   
   return result;
