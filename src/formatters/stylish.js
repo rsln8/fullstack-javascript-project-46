@@ -4,8 +4,9 @@ const stringify = (value, depth) => {
   if (!_.isObject(value)) {
     return value;
   }
-  const indent = '  '.repeat(depth + 1);
-  const bracketIndent = '  '.repeat(depth);
+  // Увеличиваем отступ для вложенных объектов внутри changed
+  const indent = '  '.repeat(depth + 2);
+  const bracketIndent = '  '.repeat(depth + 1);
   const lines = Object.entries(value).map(([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`);
   return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
@@ -15,9 +16,7 @@ const stylish = (diffTree, depth = 0) => {
     const key = node.key;
     const value = node.value;
     const indent = '  '.repeat(depth);
-    // Для плоских файлов (depth=0) отступ 2 пробела, для вложенных 6 пробелов
     const signIndent = depth === 0 ? '  ' : '  '.repeat(depth + 2);
-    // Для unchanged: на 2 пробела больше чем signIndent
     const unchangedIndent = depth === 0 ? '    ' : '  '.repeat(depth + 3);
     
     switch (node.type) {
