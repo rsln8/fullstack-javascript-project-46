@@ -29,7 +29,7 @@ describe('Plain format', () => {
     // Проверяем ключевые элементы
     expect(result).toContain("Property 'common.follow' was added with value: false");
     expect(result).toContain("Property 'common.setting2' was removed");
-    expect(result).toContain("Property 'common.setting3' was updated. From true to null");
+    expect(result).toContain("Property 'common.setting3' was updated. From [complex value] to null");
     expect(result).toContain("Property 'common.setting4' was added with value: 'blah blah'");
     expect(result).toContain("Property 'common.setting5' was added with value: [complex value]");
     expect(result).toContain("Property 'common.setting6.doge.wow' was updated. From '' to 'so much'");
