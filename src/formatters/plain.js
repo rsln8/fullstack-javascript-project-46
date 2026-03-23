@@ -37,7 +37,10 @@ function plain(diffTree, path = '') {
         result.push(`Property '${fullPath}' was removed`);
         break;
       case 'changed':
-        result.push(`Property '${fullPath}' was updated. From ${formatValue(node.oldValue)} to ${formatValue(node.newValue)}`);
+        // Для changed, oldValue и newValue могут быть объектами
+        const oldVal = formatValue(node.oldValue);
+        const newVal = formatValue(node.newValue);
+        result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
         break;
       case 'nested':
         result.push(plain(node.children, fullPath));
