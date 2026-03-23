@@ -6,16 +6,18 @@ const stringify = (value, depth) => {
   }
   const indent = '  '.repeat(depth + 1);
   const bracketIndent = '  '.repeat(depth);
-  const lines = Object.entries(value).map(([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`);
+  const lines = Object.entries(value).map(([key, val]) => {
+    return `${indent}  ${key}: ${stringify(val, depth + 1)}`;
+  });
   return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
 const stylish = (diffTree, depth = 0) => {
-  const indent = '  '.repeat(depth);
   const result = diffTree.map((node) => {
     const key = node.key;
     const value = node.value;
-    // Для depth = 0 (плоские файлы) используем 2 пробела
+    const indent = '  '.repeat(depth);
+    // signIndent: 4 пробела от начала строки для depth=1 (common)
     const signIndent = depth === 0 ? '  ' : '  '.repeat(depth + 2);
     
     switch (node.type) {
