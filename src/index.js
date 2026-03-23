@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
+const yaml = require('js-yaml');
 const getFormatter = require('./formatters');
 
 // Парсер файлов
@@ -13,8 +14,7 @@ function readFile(filepath) {
     return JSON.parse(content);
   }
   if (extension === '.yml' || extension === '.yaml') {
-    // Пока заглушка, позже добавим YAML
-    throw new Error(`YAML support coming soon: ${extension}`);
+    return yaml.load(content);
   }
   throw new Error(`Unsupported file format: ${extension}`);
 }

@@ -17,7 +17,6 @@ function formatValue(value, depth = 0) {
 }
 
 function stylish(diffTree, depth = 0) {
-  const indent = '  '.repeat(depth);
   const result = [];
   
   for (const node of diffTree) {
