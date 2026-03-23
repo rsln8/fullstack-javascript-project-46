@@ -11,24 +11,39 @@ const stringify = (value, depth) => {
 };
 
 const stylish = (diffTree, depth = 0) => {
-  const indent = '  '.repeat(depth);
   const result = diffTree.map((node) => {
     const key = node.key;
     const value = node.value;
+    
+    // Жёстко задаём отступы для разных глубин
+    let signIndent;
+    let unchangedIndent;
+    
+    if (depth === 0) {
+      signIndent = '  ';
+      unchangedIndent = '    ';
+    } else if (depth === 1) {
+      signIndent = '      ';
+      unchangedIndent = '        ';
+    } else {
+      signIndent = '  '.repeat(depth + 2);
+      unchangedIndent = '  '.repeat(depth + 3);
+    }
+    
     switch (node.type) {
       case 'added':
-        return `${indent}  + ${key}: ${stringify(value, depth + 1)}`;
+        return `${signIndent}+ ${key}: ${stringify(value, depth + 1)}`;
       case 'removed':
-        return `${indent}  - ${key}: ${stringify(value, depth + 1)}`;
+        return `${signIndent}- ${key}: ${stringify(value, depth + 1)}`;
       case 'unchanged':
-        return `${indent}    ${key}: ${stringify(value, depth + 1)}`;
+        return `${unchangedIndent}${key}: ${stringify(value, depth + 1)}`;
       case 'changed':
         return [
-          `${indent}  - ${key}: ${stringify(node.oldValue, depth + 1)}`,
-          `${indent}  + ${key}: ${stringify(node.newValue, depth + 1)}`,
+          `${signIndent}- ${key}: ${stringify(node.oldValue, depth + 1)}`,
+          `${signIndent}+ ${key}: ${stringify(node.newValue, depth + 1)}`,
         ].join('\n');
       case 'nested':
-        return `${indent}    ${key}: {\n${stylish(node.children, depth + 1)}\n${indent}    }`;
+        return `${'  '.repeat(depth)}    ${key}: {\n${stylish(node.children, depth + 1)}\n${'  '.repeat(depth)}    }`;
       default:
         return '';
     }
