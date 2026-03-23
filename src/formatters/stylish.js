@@ -4,7 +4,7 @@ const stringify = (value, depth) => {
   if (!_.isObject(value)) {
     return value;
   }
-  // Увеличиваем отступ для вложенных объектов внутри changed
+  // Увеличиваем отступ на 2 пробела для каждого уровня
   const indent = '  '.repeat(depth + 2);
   const bracketIndent = '  '.repeat(depth + 1);
   const lines = Object.entries(value).map(([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`);
