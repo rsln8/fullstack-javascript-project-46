@@ -22,7 +22,7 @@ const stringify = (value, depth) => {
     bracketIndent = '  '.repeat(depth);
   }
   
-  // Для ключей внутри объекта на глубине 2 используем 12 пробелов
+  // Для глубины 2 используем отступ 12 пробелов для ключей
   const lines = Object.entries(value).map(([key, val]) => {
     let keyIndent;
     if (depth === 2) {
