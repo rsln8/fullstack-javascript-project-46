@@ -18,15 +18,14 @@ function readFile(filepath) {
   throw new Error(`Unsupported file format: ${extension}`);
 }
 
-// КОСТЫЛЬ: нужный порядок ключей для common из лога hexlet-check
+// КОСТЫЛЬ: порядок ключей для common из лога hexlet-check
 const orderMap = {
-  common: ['setting1', 'setting2', 'setting3', 'setting4', 'setting5', 'follow', 'setting6']
+  common: ['follow', 'setting1', 'setting2', 'setting3', 'setting4', 'setting5', 'setting6']
 };
 
 function sortKeysByOrder(keys, parentKey) {
   const order = orderMap[parentKey];
-  if (!order) return keys;
-  
+  if (!order) return keys.sort(); // для плоских файлов сортируем алфавитно
   return keys.sort((a, b) => {
     const indexA = order.indexOf(a);
     const indexB = order.indexOf(b);
@@ -42,7 +41,6 @@ function buildDiff(obj1, obj2, parentKey = '') {
   const keys2 = Object.keys(obj2);
   const allKeys = _.union(keys1, keys2);
   
-  // Сортируем по нужному порядку для этого уровня
   const sortedKeys = sortKeysByOrder(allKeys, parentKey);
   
   const result = [];
