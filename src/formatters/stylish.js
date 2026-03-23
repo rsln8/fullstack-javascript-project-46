@@ -1,24 +1,22 @@
 const _ = require('lodash');
 
-const getIndent = (depth) => '  '.repeat(depth);
-
-const stringify = (data, depth) => {
-  if (!_.isObject(data)) return data;
-  const indent = getIndent(depth + 1);
-  const bracketIndent = getIndent(depth);
-  const lines = Object.entries(data).map(([key, val]) => {
-    const formattedVal = _.isObject(val) ? stringify(val, depth + 1) : val;
-    return `${indent}${key}: ${formattedVal}`;
-  });
+const stringify = (value, depth) => {
+  if (!_.isObject(value)) {
+    return value;
+  }
+  const indent = '  '.repeat(depth + 1);
+  const bracketIndent = '  '.repeat(depth);
+  const lines = Object.entries(value).map(
+    ([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`,
+  );
   return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
 const stylish = (diffTree, depth = 0) => {
-  const indent = getIndent(depth);
+  const indent = '  '.repeat(depth);
   const result = diffTree.map((node) => {
     const key = node.key;
     const value = node.value;
-
     switch (node.type) {
       case 'added':
         return `${indent}  + ${key}: ${stringify(value, depth + 1)}`;
