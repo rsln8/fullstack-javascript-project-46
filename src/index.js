@@ -21,23 +21,7 @@ function readFile(filepath) {
 function buildDiff(obj1, obj2) {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
-  
-  const allKeys = [];
-  const keysSet = new Set();
-  
-  // Сначала добавляем все ключи из первого файла (в их порядке)
-  for (const key of keys1) {
-    keysSet.add(key);
-    allKeys.push(key);
-  }
-  
-  // Затем добавляем ключи из второго файла, которых нет в первом,
-  // сохраняя порядок из второго файла
-  for (const key of keys2) {
-    if (!keysSet.has(key)) {
-      allKeys.push(key);
-    }
-  }
+  const allKeys = _.sortBy(_.union(keys1, keys2));
   
   const result = [];
   
