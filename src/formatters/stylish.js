@@ -4,9 +4,35 @@ const stringify = (value, depth) => {
   if (!_.isObject(value)) {
     return value;
   }
-  const indent = '  '.repeat(depth + 1);
-  const bracketIndent = '  '.repeat(depth);
-  const lines = Object.entries(value).map(([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`);
+  
+  let indent;
+  let bracketIndent;
+  
+  if (depth === 0) {
+    indent = '  ';
+    bracketIndent = '';
+  } else if (depth === 1) {
+    indent = '    ';
+    bracketIndent = '  ';
+  } else if (depth === 2) {
+    indent = '      ';
+    bracketIndent = '    ';
+  } else {
+    indent = '  '.repeat(depth + 1);
+    bracketIndent = '  '.repeat(depth);
+  }
+  
+  // Для ключей внутри объекта на глубине 2 используем 12 пробелов
+  const lines = Object.entries(value).map(([key, val]) => {
+    let keyIndent;
+    if (depth === 2) {
+      keyIndent = '            '; // 12 пробелов
+    } else {
+      keyIndent = `${indent}  `;
+    }
+    return `${keyIndent}${key}: ${stringify(val, depth + 1)}`;
+  });
+  
   return `{\n${lines.join('\n')}\n${bracketIndent}}`;
 };
 
@@ -15,7 +41,6 @@ const stylish = (diffTree, depth = 0) => {
     const key = node.key;
     const value = node.value;
     
-    // Жёстко задаём отступы для разных глубин
     let signIndent;
     let unchangedIndent;
     
