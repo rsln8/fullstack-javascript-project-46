@@ -4,7 +4,6 @@ const _ = require('lodash');
 const yaml = require('js-yaml');
 const getFormatter = require('./formatters');
 
-// Парсер файлов
 function readFile(filepath) {
   const absolutePath = path.resolve(process.cwd(), filepath);
   const content = fs.readFileSync(absolutePath, 'utf-8');
@@ -19,7 +18,6 @@ function readFile(filepath) {
   throw new Error(`Unsupported file format: ${extension}`);
 }
 
-// Рекурсивное построение дерева различий
 function buildDiff(obj1, obj2) {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
@@ -28,10 +26,14 @@ function buildDiff(obj1, obj2) {
   const result = [];
   
   for (const key of allKeys) {
-    const hasKey1 = _.has(obj1, key);
-    const hasKey2 = _.has(obj2, key);
+    const hasKey1 = Object.hasOwn(obj1, key);
+    const hasKey2 = Object.hasOwn(obj2, key);
     const value1 = obj1[key];
     const value2 = obj2[key];
+    
+    if (!hasKey1 && !hasKey2) {
+      continue;
+    }
     
     if (!hasKey1) {
       result.push({
@@ -70,14 +72,19 @@ function buildDiff(obj1, obj2) {
   return result;
 }
 
-// Основная функция
 function genDiff(filepath1, filepath2, formatName = 'stylish') {
   const data1 = readFile(filepath1);
   const data2 = readFile(filepath2);
   const diffTree = buildDiff(data1, data2);
   
   const formatter = getFormatter(formatName);
-  return formatter(diffTree);
+  const result = formatter(diffTree);
+  
+  // Гарантируем, что всегда возвращаем строку
+  if (typeof result !== 'string') {
+    return String(result);
+  }
+  return result;
 }
 
 module.exports = genDiff;
