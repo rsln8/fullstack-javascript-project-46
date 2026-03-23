@@ -18,13 +18,15 @@ function formatValue(value, depth = 0) {
 
 function stylish(diffTree, depth = 0) {
   const result = [];
+  // Отступ для уровня
   const indent = '  '.repeat(depth);
-  const innerIndent = '  '.repeat(depth + 1);
+  // Отступ для свойств (на 2 пробела больше)
+  const propIndent = '  '.repeat(depth + 1);
+  // Отступ для плюсов/минусов (на 4 пробела больше)
+  const signIndent = '  '.repeat(depth + 2);
   
   for (const node of diffTree) {
     const key = node.key;
-    // Для плюсов и минусов добавляем ещё 2 пробела (всего 4 на первом уровне)
-    const signIndent = depth === 0 ? '    ' : '  '.repeat(depth + 2);
     
     switch (node.type) {
       case 'added':
@@ -34,16 +36,17 @@ function stylish(diffTree, depth = 0) {
         result.push(`${signIndent}- ${key}: ${formatValue(node.value, depth + 1)}`);
         break;
       case 'unchanged':
-        result.push(`${innerIndent}  ${key}: ${formatValue(node.value, depth + 1)}`);
+        // Важно: 6 пробелов на первом уровне, а не 4
+        result.push(`${propIndent}  ${key}: ${formatValue(node.value, depth + 1)}`);
         break;
       case 'changed':
         result.push(`${signIndent}- ${key}: ${formatValue(node.oldValue, depth + 1)}`);
         result.push(`${signIndent}+ ${key}: ${formatValue(node.newValue, depth + 1)}`);
         break;
       case 'nested':
-        result.push(`${innerIndent}  ${key}: {`);
+        result.push(`${propIndent}  ${key}: {`);
         result.push(stylish(node.children, depth + 1));
-        result.push(`${innerIndent}  }`);
+        result.push(`${propIndent}  }`);
         break;
     }
   }
