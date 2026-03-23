@@ -29,17 +29,12 @@ jobs:
     - name: Run linter
       run: make lint
     
-    - name: Run tests
-      run: make test
-    
     - name: Run tests with coverage
       run: make test-coverage
-      env:
-        # Генерируем отчет в формате lcov для SonarQube
-        NODE_V8_COVERAGE: coverage
     
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6
+      if: matrix.node-version == '18.x'
+      uses: SonarSource/sonarqube-scan-action@v4
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
