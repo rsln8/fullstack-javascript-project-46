@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // ЭТО НУЖНО ДОБАВИТЬ, если ещё нет
-const getFixturePath = filename => path.join(__dirname, '__fixtures__', filename)
+const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename)
 
 describe('gendiff', () => {
   test('should compare flat JSON files', () => {

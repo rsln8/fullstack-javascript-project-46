@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // ЭТО НУЖНО ДОБАВИТЬ, если ещё нет
-const getFixturePath = filename => path.join(__dirname, '__fixtures__', filename)
+const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename)
 
 describe('Nested structures comparison', () => {
   test('should compare nested JSON files correctly', () => {

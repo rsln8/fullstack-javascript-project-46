@@ -7,7 +7,7 @@ function buildDiff(obj1, obj2) {
   const keys2 = Object.keys(obj2)
   const allKeys = _.sortBy(_.union(keys1, keys2))
 
-  return allKeys.map(key => {
+  return allKeys.map((key) => {
     const hasKey1 = _.has(obj1, key)
     const hasKey2 = _.has(obj2, key)
     const value1 = obj1[key]
