@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 function formatValue(value) {
   if (_.isPlainObject(value)) {
@@ -37,9 +37,8 @@ function plain(diffTree, path = '') {
         result.push(`Property '${fullPath}' was removed`);
         break;
       case 'changed': {
-        // Для changed, если oldValue — объект, показываем [complex value], иначе true
-        const oldVal = _.isPlainObject(node.oldValue) ? '[complex value]' : formatValue(node.oldValue);
-        const newVal = _.isPlainObject(node.newValue) ? '[complex value]' : formatValue(node.newValue);
+        const oldVal = formatValue(node.oldValue);
+        const newVal = formatValue(node.newValue);
         result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
         break;
       }
@@ -47,7 +46,6 @@ function plain(diffTree, path = '') {
         result.push(plain(node.children, fullPath));
         break;
       case 'unchanged':
-        // ничего не выводим
         break;
     }
   }
@@ -55,6 +53,4 @@ function plain(diffTree, path = '') {
   return result.filter(Boolean).join('\n');
 }
 
-module.exports = function formatPlain(diffTree) {
-  return plain(diffTree);
-};
+export default (diffTree) => plain(diffTree);

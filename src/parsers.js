@@ -1,6 +1,6 @@
-const { readFileSync } = require('fs');
-const { extname } = require('path');
-const yaml = require('js-yaml');
+import { readFileSync } from 'fs';
+import { extname } from 'path';
+import yaml from 'js-yaml';
 
 const parseJSON = (content) => JSON.parse(content);
 const parseYAML = (content) => yaml.load(content);
@@ -23,4 +23,4 @@ const parseFile = (filepath) => {
   return parse(content);
 };
 
-module.exports = parseFile;
+export default parseFile;

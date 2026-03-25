@@ -1,5 +1,10 @@
-const path = require('path');
-const genDiff = require('../src/index.js');
+import { test, expect, describe } from '@jest/globals';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import genDiff from '../src/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 

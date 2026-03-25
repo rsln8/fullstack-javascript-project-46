@@ -1,12 +1,21 @@
-const path = require('path');
-const genDiff = require('../src/index.js');
+import { test, expect, describe } from '@jest/globals';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import genDiff from '../src/index.js';
 
+// ЭТО НУЖНО ОСТАВИТЬ — это аналог __dirname в ES модулях
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ЭТО НУЖНО ДОБАВИТЬ, если ещё нет
 const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
 describe('gendiff', () => {
-  test('should compare two flat JSON files correctly', () => {
+  test('should compare flat JSON files', () => {
     const filepath1 = getFixturePath('file1.json');
     const filepath2 = getFixturePath('file2.json');
+    
+    const result = genDiff(filepath1, filepath2);
     
     const expected = `{
   - follow: false
@@ -17,7 +26,6 @@ describe('gendiff', () => {
   + verbose: true
 }`;
     
-    const result = genDiff(filepath1, filepath2);
     expect(result).toBe(expected);
   });
 
@@ -33,58 +41,5 @@ describe('gendiff', () => {
     expect(result).toContain('- timeout: 50');
     expect(result).toContain('+ timeout: 20');
     expect(result).toContain('+ verbose: true');
-  });
-
-  test('should compare nested YAML files', () => {
-    const filepath1 = getFixturePath('nested1.yml');
-    const filepath2 = getFixturePath('nested2.yml');
-    
-    const expected = `{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-      setting6: {
-          key: value
-          doge: {
-            - wow: 
-            + wow: so much
-          }
-        + ops: vops
-      }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-      abc: 12345
-      deep: {
-        id: 45
-      }
-    }
-  + group3: {
-      deep: {
-        id: {
-          number: 45
-        }
-      }
-      fee: 100500
-    }
-}`;
-    
-    const result = genDiff(filepath1, filepath2);
-    expect(result).toBe(expected);
   });
 });

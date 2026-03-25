@@ -1,6 +1,6 @@
-const stylish = require('./stylish');
-const plain = require('./plain');
-const json = require('./json');
+import stylish from './stylish.js';
+import plain from './plain.js';
+import json from './json.js';
 
 const formatters = {
   stylish,
@@ -8,10 +8,10 @@ const formatters = {
   json,
 };
 
-module.exports = function getFormatter(formatName) {
+export default (formatName) => {
   const formatter = formatters[formatName];
   if (!formatter) {
-    throw new Error(`Unknown format: ${formatName}. Supported: stylish, plain, json`);
+    throw new Error(`Unknown format: ${formatName}`);
   }
   return formatter;
 };
