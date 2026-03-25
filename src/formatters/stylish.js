@@ -2,26 +2,24 @@ import _ from 'lodash';
 
 const INDENT = 4;
 
+const getIndent = (depth) => ' '.repeat(depth * INDENT);
+
 const stringify = (value, depth) => {
   if (!_.isPlainObject(value) || value === null) {
     return String(value);
   }
 
-  const indentSize = depth * INDENT;
-  const currentIndent = ' '.repeat(indentSize);
-  const bracketIndent = ' '.repeat(indentSize - INDENT);
-
   const lines = Object.entries(value).map(([key, val]) => {
-    return `${currentIndent}${key}: ${stringify(val, depth + 1)}`;
+    return `${getIndent(depth + 1)}${key}: ${stringify(val, depth + 1)}`;
   });
 
-  return `{\n${lines.join('\n')}\n${bracketIndent}}`;
+  return `{\n${lines.join('\n')}\n${getIndent(depth)}}`;
 };
 
 const stylish = (ast, depth = 1) => {
-  const indentSize = depth * INDENT;
-  const currentIndent = ' '.repeat(indentSize - 2); // для + / -
-  const bracketIndent = ' '.repeat(indentSize - INDENT);
+  const indent = getIndent(depth);
+  const currentIndent = indent.slice(0, -2); // ключевой момент!
+  const bracketIndent = getIndent(depth - 1);
 
   const lines = ast.map((node) => {
     const { key, type } = node;
