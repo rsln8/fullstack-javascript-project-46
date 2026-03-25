@@ -1,36 +1,56 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 
-const stringify = (value) => {
-  if (_.isObject(value) && value !== null) {
+function formatValue(value) {
+  if (_.isPlainObject(value)) {
     return '[complex value]';
   }
-  if (typeof value === 'string') {
+  if (_.isString(value)) {
     return `'${value}'`;
   }
-  return String(value);
-};
+  if (_.isBoolean(value)) {
+    return value.toString();
+  }
+  if (_.isNull(value)) {
+    return 'null';
+  }
+  if (_.isNumber(value)) {
+    return value;
+  }
+  return value;
+}
 
-const plain = (ast, parentKey = '') => {
-  const lines = ast.flatMap((node) => {
-    const fullKey = parentKey ? `${parentKey}.${node.key}` : node.key;
+function buildPath(path, key) {
+  return path ? `${path}.${key}` : key;
+}
+
+function plain(diffTree, path = '') {
+  const result = [];
+
+  for (const node of diffTree) {
+    const fullPath = buildPath(path, node.key);
 
     switch (node.type) {
-      case 'nested':
-        return plain(node.children, fullKey);
-      case 'added':
-        return `Property '${fullKey}' was added with value: ${stringify(node.value)}`;
-      case 'removed':
-        return `Property '${fullKey}' was removed`;
-      case 'changed':
-        return `Property '${fullKey}' was updated. From ${stringify(node.oldValue)} to ${stringify(node.newValue)}`;
-      case 'unchanged':
-        return [];
-      default:
-        throw new Error(`Unknown type: ${node.type}`);
+    case 'added':
+      result.push(`Property '${fullPath}' was added with value: ${formatValue(node.value)}`);
+      break;
+    case 'removed':
+      result.push(`Property '${fullPath}' was removed`);
+      break;
+    case 'changed': {
+      const oldVal = formatValue(node.oldValue);
+      const newVal = formatValue(node.newValue);
+      result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
+      break;
     }
-  });
+    case 'nested':
+      result.push(plain(node.children, fullPath));
+      break;
+    case 'unchanged':
+      break;
+    }
+  }
 
-  return lines.join('\n');
-};
+  return result.filter(Boolean).join('\n');
+}
 
-export default plain;
+export default diffTree => plain(diffTree);

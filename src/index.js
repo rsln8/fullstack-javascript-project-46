@@ -1,56 +1,50 @@
-﻿import fs from 'fs';
-import path from 'path';
 import _ from 'lodash';
-import yaml from 'js-yaml';
-import formatter from './formatters/index.js';
+import parseFile from './parsers.js';
+import getFormatter from './formatters/index.js';
 
-const parseJSON = (data) => JSON.parse(data);
-const parseYAML = (data) => yaml.load(data);
+function buildDiff(obj1, obj2) {
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  const allKeys = _.sortBy(_.union(keys1, keys2));
 
-const parsers = {
-  '.json': parseJSON,
-  '.yml': parseYAML,
-  '.yaml': parseYAML,
-};
-
-const parseFile = (filepath) => {
-  const fullPath = path.resolve(filepath);
-  const data = fs.readFileSync(fullPath, 'utf-8');
-  const ext = path.extname(fullPath).toLowerCase();
-
-  if (!parsers[ext]) {
-    throw new Error(`Unsupported file extension: ${ext}`);
-  }
-
-  return parsers[ext](data);
-};
-
-const buildAST = (obj1, obj2) => {
-  const keys = _.union(Object.keys(obj1), Object.keys(obj2)).sort();
-
-  return keys.map((key) => {
+  return allKeys.map((key) => {
+    const hasKey1 = _.has(obj1, key);
+    const hasKey2 = _.has(obj2, key);
     const value1 = obj1[key];
     const value2 = obj2[key];
 
-    if (!Object.hasOwn(obj1, key)) {
+    if (!hasKey1) {
       return { key, type: 'added', value: value2 };
     }
-    if (!Object.hasOwn(obj2, key)) {
+    if (!hasKey2) {
       return { key, type: 'removed', value: value1 };
     }
-    if (_.isObject(value1) && _.isObject(value2) && !_.isArray(value1) && !_.isArray(value2)) {
-      return { key, type: 'nested', children: buildAST(value1, value2) };
+    if (_.isEqual(value1, value2)) {
+      return { key, type: 'unchanged', value: value1 };
     }
-    if (!_.isEqual(value1, value2)) {
-      return { key, type: 'changed', oldValue: value1, newValue: value2 };
+    if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
+      return {
+        key,
+        type: 'nested',
+        children: buildDiff(value1, value2),
+      };
     }
-    return { key, type: 'unchanged', value: value1 };
+    return {
+      key,
+      type: 'changed',
+      oldValue: value1,
+      newValue: value2,
+    };
   });
-};
+}
 
-export default (filepath1, filepath2, format = 'stylish') => {
+function genDiff(filepath1, filepath2, formatName = 'stylish') {
   const data1 = parseFile(filepath1);
   const data2 = parseFile(filepath2);
-  const ast = buildAST(data1, data2);
-  return formatter(ast, format);
-};
+  const diffTree = buildDiff(data1, data2);
+
+  const formatter = getFormatter(formatName);
+  return formatter(diffTree);
+}
+
+export default genDiff;
