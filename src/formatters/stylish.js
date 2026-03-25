@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 const INDENT = 4
 
-const getIndent = depth => ' '.repeat(depth * INDENT)
+const getIndent = (depth) => ' '.repeat(depth * INDENT)
 
 const stringify = (value, depth) => {
   if (!_.isPlainObject(value) || value === null) {
@@ -21,28 +21,23 @@ const stylish = (ast, depth = 1) => {
   const currentIndent = indent.slice(0, -2)
   const bracketIndent = getIndent(depth - 1)
 
-  const lines = ast.map(node => {
+  const lines = ast.map((node) => {
     const { key, type } = node
 
     switch (type) {
       case 'nested':
         return `${currentIndent}  ${key}: ${stylish(node.children, depth + 1)}`
-
       case 'added':
         return `${currentIndent}+ ${key}: ${stringify(node.value, depth)}`
-
       case 'removed':
         return `${currentIndent}- ${key}: ${stringify(node.value, depth)}`
-
       case 'changed':
         return [
           `${currentIndent}- ${key}: ${stringify(node.oldValue, depth)}`,
           `${currentIndent}+ ${key}: ${stringify(node.newValue, depth)}`,
         ].join('\n')
-
       case 'unchanged':
         return `${currentIndent}  ${key}: ${stringify(node.value, depth)}`
-
       default:
         throw new Error(`Unknown node type: ${type}`)
     }
