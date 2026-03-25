@@ -8,9 +8,8 @@
     "gendiff": "bin/gendiff.js"
   },
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs",
-    "lint": "eslint --config eslint.config.js .",
-    "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --config jest.config.cjs"
+    "test": "jest --config jest.config.cjs",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -29,6 +28,7 @@
     "@eslint/js": "^9.39.2",
     "@stylistic/eslint-plugin": "^5.10.0",
     "babel-jest": "^29.7.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
     "eslint-plugin-jest": "^28.14.0",
     "globals": "^16.5.0",
