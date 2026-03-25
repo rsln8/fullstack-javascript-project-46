@@ -1,40 +1,44 @@
 import _ from 'lodash';
 
-function stringify(value, depth) {
-  if (!_.isObject(value)) {
-    return value;
-  }
-  const indent = '  '.repeat(depth + 1);
-  const bracketIndent = '  '.repeat(depth);
-  const lines = Object.entries(value).map(([key, val]) => `${indent}  ${key}: ${stringify(val, depth + 1)}`);
-  return `{\n${lines.join('\n')}\n${bracketIndent}}`;
-}
+const indent = (depth, spaces = 4) => ' '.repeat(depth * spaces - 2);
+const closeIndent = (depth, spaces = 4) => ' '.repeat(depth * spaces);
 
-function stylish(diffTree, depth = 0) {
-  const indent = '  '.repeat(depth);
-  const result = diffTree.map((node) => {
-    const key = node.key;
-    const value = node.value;
-    
-    switch (node.type) {
+const stringify = (value, depth) => {
+  if (!_.isObject(value) || value === null) {
+    return String(value);
+  }
+  const lines = Object.entries(value).map(([key, val]) => {
+    const nestedValue = _.isObject(val) ? stringify(val, depth + 1) : val;
+    return `${indent(depth + 1)}  ${key}: ${nestedValue}`;
+  });
+  return `{\n${lines.join('\n')}\n${closeIndent(depth + 1)}}`;
+};
+
+const stylish = (ast, depth = 1) => {
+  const lines = ast.map((node) => {
+    const { key, type } = node;
+    const currentIndent = indent(depth);
+
+    switch (type) {
+    case 'nested':
+      return `${currentIndent}  ${key}: ${stylish(node.children, depth + 1)}`;
     case 'added':
-      return `${indent}  + ${key}: ${stringify(value, depth + 1)}`;
+      return `${currentIndent}+ ${key}: ${stringify(node.value, depth)}`;
     case 'removed':
-      return `${indent}  - ${key}: ${stringify(value, depth + 1)}`;
-    case 'unchanged':
-      return `${indent}    ${key}: ${stringify(value, depth + 1)}`;
+      return `${currentIndent}- ${key}: ${stringify(node.value, depth)}`;
     case 'changed':
       return [
-        `${indent}  - ${key}: ${stringify(node.oldValue, depth + 1)}`,
-        `${indent}  + ${key}: ${stringify(node.newValue, depth + 1)}`,
+        `${currentIndent}- ${key}: ${stringify(node.oldValue, depth)}`,
+        `${currentIndent}+ ${key}: ${stringify(node.newValue, depth)}`,
       ].join('\n');
-    case 'nested':
-      return `${indent}    ${key}: {\n${stylish(node.children, depth + 1)}\n${indent}    }`;
+    case 'unchanged':
+      return `${currentIndent}  ${key}: ${stringify(node.value, depth)}`;
     default:
-      return '';
+      throw new Error(`Unknown type: ${type}`);
     }
   });
-  return result.join('\n');
-}
 
-export default (diffTree) => `{\n${stylish(diffTree)}\n}`;
+  return `{\n${lines.join('\n')}\n${closeIndent(depth - 1)}}`;
+};
+
+export default stylish;
