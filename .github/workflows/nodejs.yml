@@ -1,10 +1,10 @@
-name: Node CI
+﻿name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, master]
   pull_request:
-    branches: [ main ]
+    branches: [main, master]
 
 jobs:
   build:
@@ -12,20 +12,14 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install
-        run: |
-          npm ci
-      - name: Run linter
-        run: |
-          npm run lint
-      - name: Run tests
-        run: |
-          npm test
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
