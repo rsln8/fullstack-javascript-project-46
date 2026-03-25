@@ -1,37 +1,34 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/rsln8/fullstack-javascript-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/rsln8/fullstack-javascript-project-46/actions)",
-  "main": "index.js",
-  "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "lint": "npx eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rsln8/fullstack-javascript-project-46.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rsln8/fullstack-javascript-project-46/issues"
-  },
-  "homepage": "https://github.com/rsln8/fullstack-javascript-project-46#readme",
-  "dependencies": {
-    "commander": "^14.0.3",
-    "lodash": "^4.17.23"
-  },
+  "description": "Compares two configuration files and shows a difference",
+  "main": "src/index.js",
   "type": "module",
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint ."
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
+  "keywords": ["diff", "json", "yaml", "cli"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21"
+  },
   "devDependencies": {
-    "@jest/globals": "^30.2.0",
-    "eslint": "^8.57.1",
+    "@jest/globals": "^29.7.0",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.32.0",
-    "jest": "^30.2.0",
-    "js-yaml": "^4.1.1"
+    "eslint-plugin-import": "^2.29.0",
+    "jest": "^29.7.0"
   }
 }

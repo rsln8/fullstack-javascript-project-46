@@ -2,19 +2,23 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
+const parseJSON = (data) => JSON.parse(data);
+const parseYAML = (data) => yaml.load(data);
+
 const parsers = {
-  '.json': (content) => JSON.parse(content),
-  '.yml': (content) => yaml.load(content),
-  '.yaml': (content) => yaml.load(content),
+  '.json': parseJSON,
+  '.yml': parseYAML,
+  '.yaml': parseYAML,
 };
 
 export default (filepath) => {
-  const content = fs.readFileSync(filepath, 'utf8');
-  const extension = path.extname(filepath).toLowerCase();
-  
-  if (!parsers[extension]) {
-    throw new Error(`Unsupported file format: ${extension}`);
+  const fullPath = path.resolve(filepath);
+  const data = fs.readFileSync(fullPath, 'utf-8');
+  const ext = path.extname(fullPath).toLowerCase();
+
+  if (!parsers[ext]) {
+    throw new Error(`Unsupported file extension: ${ext}`);
   }
-  
-  return parsers[extension](content);
+
+  return parsers[ext](data);
 };
