@@ -17,21 +17,21 @@ function stylish(diffTree, depth = 0) {
     const value = node.value;
     
     switch (node.type) {
-      case 'added':
-        return `${indent}  + ${key}: ${stringify(value, depth + 1)}`;
-      case 'removed':
-        return `${indent}  - ${key}: ${stringify(value, depth + 1)}`;
-      case 'unchanged':
-        return `${indent}    ${key}: ${stringify(value, depth + 1)}`;
-      case 'changed':
-        return [
-          `${indent}  - ${key}: ${stringify(node.oldValue, depth + 1)}`,
-          `${indent}  + ${key}: ${stringify(node.newValue, depth + 1)}`,
-        ].join('\n');
-      case 'nested':
-        return `${indent}    ${key}: {\n${stylish(node.children, depth + 1)}\n${indent}    }`;
-      default:
-        return '';
+    case 'added':
+      return `${indent}  + ${key}: ${stringify(value, depth + 1)}`;
+    case 'removed':
+      return `${indent}  - ${key}: ${stringify(value, depth + 1)}`;
+    case 'unchanged':
+      return `${indent}    ${key}: ${stringify(value, depth + 1)}`;
+    case 'changed':
+      return [
+        `${indent}  - ${key}: ${stringify(node.oldValue, depth + 1)}`,
+        `${indent}  + ${key}: ${stringify(node.newValue, depth + 1)}`,
+      ].join('\n');
+    case 'nested':
+      return `${indent}    ${key}: {\n${stylish(node.children, depth + 1)}\n${indent}    }`;
+    default:
+      return '';
     }
   });
   return result.join('\n');

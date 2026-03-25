@@ -30,23 +30,23 @@ function plain(diffTree, path = '') {
     const fullPath = buildPath(path, node.key);
     
     switch (node.type) {
-      case 'added':
-        result.push(`Property '${fullPath}' was added with value: ${formatValue(node.value)}`);
-        break;
-      case 'removed':
-        result.push(`Property '${fullPath}' was removed`);
-        break;
-      case 'changed': {
-        const oldVal = formatValue(node.oldValue);
-        const newVal = formatValue(node.newValue);
-        result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
-        break;
-      }
-      case 'nested':
-        result.push(plain(node.children, fullPath));
-        break;
-      case 'unchanged':
-        break;
+    case 'added':
+      result.push(`Property '${fullPath}' was added with value: ${formatValue(node.value)}`);
+      break;
+    case 'removed':
+      result.push(`Property '${fullPath}' was removed`);
+      break;
+    case 'changed': {
+      const oldVal = formatValue(node.oldValue);
+      const newVal = formatValue(node.newValue);
+      result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
+      break;
+    }
+    case 'nested':
+      result.push(plain(node.children, fullPath));
+      break;
+    case 'unchanged':
+      break;
     }
   }
   
