@@ -1,7 +1,6 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import stylistic from '@stylistic/eslint-plugin'
-import jestPlugin from 'eslint-plugin-jest'
+import js from '@eslint/js';
+import globals from 'globals';
+import jest from 'eslint-plugin-jest';
 
 export default [
   js.configs.recommended,
@@ -18,28 +17,20 @@ export default [
         ...globals.jest,
       },
     },
-    plugins: {
-      '@stylistic': stylistic,
-    },
     rules: {
       'no-console': 'off',
-
-      '@stylistic/indent': ['error', 2],
-      '@stylistic/quotes': ['error', 'single'],
-      '@stylistic/semi': ['error', 'never'],
-      '@stylistic/no-trailing-spaces': 'error',
-      '@stylistic/eol-last': ['error', 'always'],
-      '@stylistic/arrow-parens': ['error', 'always'],
-      '@stylistic/object-curly-spacing': ['error', 'always'],
+      'indent': ['error', 2],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
     },
   },
   {
     files: ['__tests__/**/*.js'],
     plugins: {
-      jest: jestPlugin,
+      jest,
     },
     rules: {
-      ...jestPlugin.configs.recommended.rules,
+      ...jest.configs.recommended.rules,
     },
   },
-]
+];
