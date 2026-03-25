@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs",
-    "lint": "eslint --config eslint.config.cjs .",
+    "lint": "eslint --config eslint.config.js .",
     "test-coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --config jest.config.cjs"
   },
   "keywords": [],

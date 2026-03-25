@@ -1,9 +1,9 @@
-const js = require('@eslint/js')
-const globals = require('globals')
-const stylistic = require('@stylistic/eslint-plugin')
-const jestPlugin = require('eslint-plugin-jest')
+import js from '@eslint/js'
+import globals from 'globals'
+import stylistic from '@stylistic/eslint-plugin'
+import jestPlugin from 'eslint-plugin-jest'
 
-module.exports = [
+export default [
   js.configs.recommended,
   {
     ignores: ['node_modules/', 'coverage/', '__tests__/__fixtures__/', '**/*.json'],
