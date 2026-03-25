@@ -54,7 +54,7 @@ describe('JSON format', () => {
 
     expect(Array.isArray(parsed)).toBe(true)
 
-    const group1Node = parsed.find((item) => item.key === 'group1')
+    const group1Node = parsed.find(item => item.key === 'group1')
     expect(group1Node).toBeDefined()
     expect(group1Node.type).toBe('nested')
   })

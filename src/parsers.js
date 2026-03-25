@@ -11,7 +11,7 @@ const parsers = {
   '.yaml': parseYAML,
 }
 
-const parseFile = filepath => {
+const parseFile = (filepath) => {
   const content = readFileSync(filepath, 'utf-8')
   const extension = extname(filepath).toLowerCase()
   const parse = parsers[extension]
