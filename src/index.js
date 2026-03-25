@@ -1,4 +1,4 @@
-﻿import fs from 'fs';
+import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import yaml from 'js-yaml';
@@ -42,7 +42,9 @@ const buildAST = (obj1, obj2) => {
       return { key, type: 'nested', children: buildAST(value1, value2) };
     }
     if (!_.isEqual(value1, value2)) {
-      return { key, type: 'changed', oldValue: value1, newValue: value2 };
+      return {
+        key, type: 'changed', oldValue: value1, newValue: value2,
+      };
     }
     return { key, type: 'unchanged', value: value1 };
   });

@@ -1,4 +1,4 @@
-﻿import _ from 'lodash';
+import _ from 'lodash';
 
 const indent = (depth, spaces = 4) => ' '.repeat(depth * spaces - 2);
 const closeIndent = (depth, spaces = 4) => ' '.repeat(depth * spaces);
