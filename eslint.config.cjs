@@ -1,6 +1,7 @@
-const js = require('@eslint/js');
-const globals = require('globals');
-const jestPlugin = require('eslint-plugin-jest');
+const js = require('@eslint/js')
+const globals = require('globals')
+const stylistic = require('@stylistic/eslint-plugin')
+const jestPlugin = require('eslint-plugin-jest')
 
 module.exports = [
   js.configs.recommended,
@@ -17,11 +18,19 @@ module.exports = [
         ...globals.jest,
       },
     },
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
       'no-console': 'off',
-      'indent': ['error', 2],
-      'quotes': ['error', 'single'],
-      'semi': ['error', 'always'],
+
+      '@stylistic/indent': ['error', 2],
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/semi': ['error', 'never'],
+      '@stylistic/no-trailing-spaces': 'error',
+      '@stylistic/eol-last': ['error', 'always'],
+      '@stylistic/arrow-parens': ['error', 'as-needed'],
+      '@stylistic/object-curly-spacing': ['error', 'always'],
     },
   },
   {
@@ -33,4 +42,4 @@ module.exports = [
       ...jestPlugin.configs.recommended.rules,
     },
   },
-];
+]
