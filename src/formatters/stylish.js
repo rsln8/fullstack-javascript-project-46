@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 const INDENT = 4
 
-const getIndent = (depth) => ' '.repeat(depth * INDENT)
+const getIndent = depth => ' '.repeat(depth * INDENT)
 
 const stringify = (value, depth) => {
   if (!_.isPlainObject(value) || value === null) {

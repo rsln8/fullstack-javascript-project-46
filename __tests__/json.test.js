@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // ЭТО НУЖНО ДОБАВИТЬ, если ещё нет
-const getFixturePath = (filename) => path.join(__dirname, '__fixtures__', filename)
+const getFixturePath = filename => path.join(__dirname, '__fixtures__', filename)
 
 describe('JSON format', () => {
   test('should output json format for flat JSON files', () => {
@@ -21,7 +21,7 @@ describe('JSON format', () => {
     expect(Array.isArray(parsed)).toBe(true)
     expect(parsed).toHaveLength(5)
 
-    const keys = parsed.map((item) => item.key)
+    const keys = parsed.map(item => item.key)
     expect(keys).toContain('follow')
     expect(keys).toContain('host')
     expect(keys).toContain('proxy')
@@ -39,7 +39,7 @@ describe('JSON format', () => {
     expect(Array.isArray(parsed)).toBe(true)
 
     // Ищем вложенную структуру
-    const commonNode = parsed.find((item) => item.key === 'common')
+    const commonNode = parsed.find(item => item.key === 'common')
     expect(commonNode.type).toBe('nested')
     expect(commonNode.children).toBeDefined()
     expect(commonNode.children.length).toBeGreaterThan(0)

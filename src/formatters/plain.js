@@ -53,4 +53,4 @@ function plain(diffTree, path = '') {
   return result.filter(Boolean).join('\n')
 }
 
-export default (diffTree) => plain(diffTree)
+export default diffTree => plain(diffTree)
