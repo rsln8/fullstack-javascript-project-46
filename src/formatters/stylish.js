@@ -18,7 +18,7 @@ const stringify = (value, depth) => {
 
 const stylish = (ast, depth = 1) => {
   const indent = getIndent(depth)
-  const currentIndent = indent.slice(0, -2) // ключевой момент!
+  const currentIndent = indent.slice(0, -2)
   const bracketIndent = getIndent(depth - 1)
 
   const lines = ast.map(node => {
