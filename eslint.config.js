@@ -1,15 +1,8 @@
 import js from '@eslint/js';
 import globals from 'globals';
-import stylistic from '@stylistic/eslint-plugin';
 
 export default [
   js.configs.recommended,
-  stylistic.configs.customize({
-    indent: 2,
-    quotes: 'single',
-    semi: 'always',
-    commaDangle: 'always-multiline',
-  }),
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -21,6 +14,10 @@ export default [
     },
     rules: {
       'no-console': 'off',
+      'indent': ['error', 2],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
+      'comma-dangle': ['error', 'always-multiline'],
     },
   },
 ];
