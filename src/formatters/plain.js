@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const formatValue = (value) => {
+const formatValue = value => {
   if (_.isPlainObject(value)) {
     return '[complex value]';
   }
