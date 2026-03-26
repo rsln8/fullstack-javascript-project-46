@@ -1,5 +1,5 @@
-import js from '@eslint/js';
-import globals from 'globals';
+import js from '@eslint/js'
+import globals from 'globals'
 
 export default [
   js.configs.recommended,
@@ -14,10 +14,10 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'indent': ['error', 2],
-      'quotes': ['error', 'single'],
-      'semi': ['error', 'always'],
+      indent: ['error', 2],
+      quotes: ['error', 'single'],
+      semi: ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
     },
   },
-];
+]
