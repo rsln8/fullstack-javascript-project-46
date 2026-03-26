@@ -1,16 +1,13 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import jest from 'eslint-plugin-jest';
+import js from '@eslint/js'
+import globals from 'globals'
+import stylistic from '@stylistic/eslint-plugin'
 
 export default [
   js.configs.recommended,
+  stylistic.configs['recommended'],
   {
-    ignores: ['node_modules/', 'coverage/', '__tests__/__fixtures__/', '**/*.json'],
-  },
-  {
-    files: ['**/*.js'],
     languageOptions: {
-      ecmaVersion: 'latest',
+      ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
         ...globals.node,
@@ -19,18 +16,6 @@ export default [
     },
     rules: {
       'no-console': 'off',
-      'indent': ['error', 2],
-      'quotes': ['error', 'single'],
-      'semi': ['error', 'always'],
     },
   },
-  {
-    files: ['__tests__/**/*.js'],
-    plugins: {
-      jest,
-    },
-    rules: {
-      ...jest.configs.recommended.rules,
-    },
-  },
-];
+]
