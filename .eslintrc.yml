@@ -5,7 +5,6 @@ env:
 
 extends:
   - eslint:recommended
-  - plugin:jest/recommended
 
 parserOptions:
   ecmaVersion: 2022
@@ -25,3 +24,6 @@ rules:
     - error
     - always-multiline
   no-console: off
+  arrow-parens:
+    - error
+    - as-needed

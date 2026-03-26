@@ -15,3 +15,4 @@ export default formatName => {
   }
   return formatter;
 };
+
