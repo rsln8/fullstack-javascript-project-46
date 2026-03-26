@@ -21,7 +21,7 @@ const stylish = (ast, depth = 1) => {
   const currentIndent = indent.slice(0, -2);
   const bracketIndent = getIndent(depth - 1);
 
-  const lines = ast.map((node) => {
+  const lines = ast.map(node => {
     const { key, type } = node;
 
     switch (type) {
