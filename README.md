@@ -1,13 +1,11 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/Anyakin666/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Anyakin666/frontend-project-46/actions)
 
-[![CI](https://github.com/Anyakin666/frontend-project-46/actions/workflows/ci.yml/badge.svg)](https://github.com/Anyakin666/frontend-project-46/actions/workflows/ci.yml)
+
+
 
 ![Coverage](https://img.shields.io/badge/coverage-88.88%25-green)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Anyakin666_frontend-project-46&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Anyakin666_frontend-project-46)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Anyakin666_frontend-project-46&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Anyakin666_frontend-project-46)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Anyakin666_frontend-project-46&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Anyakin666_frontend-project-46)
+
 Gendiff - Difference Calculator
 https://github.com/anyakin666/frontend-project-46/actions/workflows/ci.yml/badge.svg
 https://img.shields.io/badge/coverage-88.88%2525-green
