@@ -1,37 +1,56 @@
 import _ from 'lodash';
 
-const stringify = (value) => {
-  if (_.isObject(value) && value !== null) {
+function formatValue(value) {
+  if (_.isPlainObject(value)) {
     return '[complex value]';
   }
-  if (typeof value === 'string') {
+  if (_.isString(value)) {
     return `'${value}'`;
   }
-  return String(value);
-};
+  if (_.isBoolean(value)) {
+    return value.toString();
+  }
+  if (_.isNull(value)) {
+    return 'null';
+  }
+  if (_.isNumber(value)) {
+    return value;
+  }
+  return value;
+}
 
-const plain = (diffTree, parentPath = '') => {
-  const lines = diffTree
-    .filter((node) => node.type !== 'unchanged')
-    .map((node) => {
-      const { key, type, value, oldValue, newValue, children } = node;
-      const fullPath = parentPath ? `${parentPath}.${key}` : key;
+function buildPath(path, key) {
+  return path ? `${path}.${key}` : key;
+}
 
-      switch (type) {
-      case 'nested':
-        return plain(children, fullPath);
-      case 'added':
-        return `Property '${fullPath}' was added with value: ${stringify(value)}`;
-      case 'removed':
-        return `Property '${fullPath}' was removed`;
-      case 'changed':
-        return `Property '${fullPath}' was updated. From ${stringify(oldValue)} to ${stringify(newValue)}`;
-      default:
-        return '';
-      }
-    });
+function plain(diffTree, path = '') {
+  const result = [];
 
-  return lines.flat().join('\n');
-};
+  for (const node of diffTree) {
+    const fullPath = buildPath(path, node.key);
 
-export default plain;
+    switch (node.type) {
+    case 'added':
+      result.push(`Property '${fullPath}' was added with value: ${formatValue(node.value)}`);
+      break;
+    case 'removed':
+      result.push(`Property '${fullPath}' was removed`);
+      break;
+    case 'changed': {
+      const oldVal = formatValue(node.oldValue);
+      const newVal = formatValue(node.newValue);
+      result.push(`Property '${fullPath}' was updated. From ${oldVal} to ${newVal}`);
+      break;
+    }
+    case 'nested':
+      result.push(plain(node.children, fullPath));
+      break;
+    case 'unchanged':
+      break;
+    }
+  }
+
+  return result.filter(Boolean).join('\n');
+}
+
+export default diffTree => plain(diffTree);

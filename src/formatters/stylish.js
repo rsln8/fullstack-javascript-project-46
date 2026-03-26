@@ -22,22 +22,22 @@ const stylish = (ast, depth = 1) => {
   const bracketIndent = getIndent(depth - 1);
 
   const lines = ast.map((node) => {
-    const { key, type, value, oldValue, newValue, children } = node;
+    const { key, type } = node;
 
     switch (type) {
     case 'nested':
-      return `${currentIndent}  ${key}: ${stylish(children, depth + 1)}`;
+      return `${currentIndent}  ${key}: ${stylish(node.children, depth + 1)}`;
     case 'added':
-      return `${currentIndent}+ ${key}: ${stringify(value, depth)}`;
+      return `${currentIndent}+ ${key}: ${stringify(node.value, depth)}`;
     case 'removed':
-      return `${currentIndent}- ${key}: ${stringify(value, depth)}`;
+      return `${currentIndent}- ${key}: ${stringify(node.value, depth)}`;
     case 'changed':
       return [
-        `${currentIndent}- ${key}: ${stringify(oldValue, depth)}`,
-        `${currentIndent}+ ${key}: ${stringify(newValue, depth)}`,
+        `${currentIndent}- ${key}: ${stringify(node.oldValue, depth)}`,
+        `${currentIndent}+ ${key}: ${stringify(node.newValue, depth)}`,
       ].join('\n');
     case 'unchanged':
-      return `${currentIndent}  ${key}: ${stringify(value, depth)}`;
+      return `${currentIndent}  ${key}: ${stringify(node.value, depth)}`;
     default:
       throw new Error(`Unknown node type: ${type}`);
     }
